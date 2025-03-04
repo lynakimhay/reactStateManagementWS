@@ -1,15 +1,26 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { useEffect } from "react";
+import { fetchUsers } from "../store/shoppingSlice";
+
 
 export const ShoppingList = () => {
   const navigate = useNavigate();
-  const items = ["Apples", "Bananas", "Oranges"]
-  const userName = "Jonh"
+  const items = useSelector((state: RootState) => state.shopping.items);
+  const userName= useSelector((state: RootState) => state.user.userNames);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect (()=>{
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
 
+  
   return (
     <div className="p-6 min-h-screen min-w-screen bg-gray-100 flex flex-col items-center text-black">
       <h1 className="text-2xl font-bold mb-4">Shopping List</h1>
-      <p className="text-lg mb-4">Welcome, {userName || "Guest"}!</p> {/* Display user name */}
+      <p className="text-lg mb-4">Welcome, {userName || "Guest"}!</p> 
       {items.length === 0 ? (
         <p className="text-gray-500">Nothing to buy yet!</p>
       ) : (
@@ -28,7 +39,7 @@ export const ShoppingList = () => {
         </ul>
       )}
       <button
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="mt-4 px-4 py-2 bg-blue-500 text-black rounded hover:bg-blue-600"
         onClick={() => navigate("/add-item")}
       >
         Add Item
